@@ -1,4 +1,4 @@
-# insightVM API
+# insightVM-API
 
 I developped these scripts to get information in an easier way than through the GUI or simply not available within the insightVM features as-is.
 
@@ -51,7 +51,7 @@ I hope these scripts will help some of you.
    ```
 
 ### unwantedSoft.py:
-  This script defines a list of software that you don't want on your infrastructure. Edit this list as you wish, I just entered some software as example.
+  This script defines a list of software per software that you don't want on your infrastructure. Edit this list as you wish, I just entered some software as example.
   
   **With the output of assetList.py** it will generates a JSON file that will tell you on which asset this software is present.
   I recommend that you use the softwareList.py script, review the list and copy-paste the name of software you don't want.
@@ -73,5 +73,26 @@ I hope these scripts will help some of you.
             "myServer5"
          ]
      ]
+  ]
+  ```
+
+### unwantedSoftPerAsset.py:
+  This script defines a list of software that you don't want per asset on your infrastructure. Edit this list as you wish, I just entered some software as example.
+  
+  **With the output of assetList.py** it will generates a JSON file that will tell you on which asset this software is present.
+  I recommend that you use the softwareList.py script, review the list and copy-paste the name of software you don't want.
+  ```
+  Output Example:
+  [
+    {
+        "hostname": "server1",
+        "ip": "10.10.0.1",
+        "os": "Microsoft Windows Server 2012 R2 Datacenter Edition",
+        "softList": [
+            "soft1",
+            "soft2",
+            "soft3"
+        ]
+    }
   ]
   ```

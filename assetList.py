@@ -11,6 +11,9 @@
 #	2) Run the script
 #	3) Review the results within generated assetList.json file
 #
+# Output:
+#	A JSON file
+#
 # Performance:
 # 	2.000 assets in around 3min
 

@@ -1,5 +1,5 @@
 # Purpose:
-# 	This script generates a JSON association of software -> hostname
+# 	This script generates a JSON association of hostname -> software
 # 	I use this script to find unwanted software present on my servers
 # 
 # Dependance:
@@ -11,47 +11,48 @@
 #	   You may want to use softwareList.py script to have a complete list of the software found on all your assets by insightVM.
 # 	2) Run the assetList.py script that will generate a flat file of all installed software per assetList
 # 	3) Run this script to parse the asseList.json file created by assetList.py
-# 	4) unwantedSoft.json file and unwantedSoft.csv file are generated
+# 	4) unwantedSoftPerAsset.json file and unwantedSoftPerAsset.csv are generated
 # 	5) Review your results
 #
 # Output:
-#	A Json file and a CSV file.
-
+#	A Json file and a CSV file
 
 import json, os
 
 FILE = "assetList.json"
-RESULT_FILE_JSON = "unwantedSoft.json"
-RESULT_FILE_CSV = "unwantedSoft.csv"
+RESULT_FILE_JSON = "unwantedSoftPerAsset.json"
+RESULT_FILE_CSV = "unwantedSoftPerAsset.csv"
 
 UNWANTED_SOFT = ["Adobe Reader", "Adobe Acrobat Reader", "Adobe PDF Reader", "Adobe AIR", "Adobe Flash", "Foxit", "LogMeIn", "Malwarebytes",
 				 "Microsoft Office", "Silverlight", "Mozilla Firefox", "TeamViewer", "VideoLAN", "WebEx", "Wireshark"]
 
-class Software:
-        def __init__(self, softname, serverList=[]):
-                self.softname = softname
-                self.serverList = serverList
+class Server:
+        def __init__(self, hostname, ip, os, softList=[]):
+                self.hostname = hostname
+                self.ip = ip
+                self.os = os
+                self.softList = softList
         def toCSV(self):
-                return self.softname + ";"  + "".join([str(server) + ";" for server in self.serverList]) + "\n"
-				 
+                return self.hostname + ";" + self.ip + ";" + self.os + ";" + "".join([str(soft) + ";" for soft in self.softList]) + "\n"
+
 result = []
 with open(FILE) as f:
 	data = json.load(f)
-for uwSoft in UNWANTED_SOFT:
-	serverList = []
-	for server in data["serverList"]:
+for server in data["serverList"]:
+	softList = []
+	for uwSoft in UNWANTED_SOFT:
 		for soft in server["softList"]:
 			if soft.lower().find(uwSoft.lower()) != -1:
-				serverList.append(server["hostname"])
-	if len(serverList) > 0:
-		result.append(Software(uwSoft, serverList))
-	serverList = []
+				softList.append(soft)
+	if len(softList) > 0:
+		result.append(Server(server["hostname"], server["ip"], server["os"],softList))
+	softList = []
 if os.path.isfile(RESULT_FILE_JSON):
 	os.remove(RESULT_FILE_JSON)
 with open(RESULT_FILE_JSON,"a") as f:
 	f.write(json.dumps(result, default=lambda o: o.__dict__, sort_keys=True, indent=4))
-print(RESULT_FILE_JSON+ " has been created.")
-
+print(RESULT_FILE_JSON + " has been created.")
+	
 if os.path.isfile(RESULT_FILE_CSV):
 	os.remove(RESULT_FILE_CSV)
 with open(RESULT_FILE_CSV,"a") as f:
