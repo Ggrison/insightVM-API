@@ -33,7 +33,7 @@ class Server:
                 self.os = os
                 self.softList = softList
         def toCSV(self):
-                return self.hostname + ";" + self.ip + ";" + self.os + ";" + "".join([str(soft) + ";" for soft in self.softList]) + "\n"
+                return self.hostname + ";" + self.ip + ";" + self.os + ";" + "".join([soft + ";" for soft in self.softList]) + "\n"
 
 result = []
 with open(FILE) as f:
@@ -57,5 +57,5 @@ if os.path.isfile(RESULT_FILE_CSV):
 	os.remove(RESULT_FILE_CSV)
 with open(RESULT_FILE_CSV,"a") as f:
 	for s in result:
-		f.write(s.toCSV())
+		f.write(s.toCSV().encode('utf-8'))
 print(RESULT_FILE_CSV + " has been created.")
